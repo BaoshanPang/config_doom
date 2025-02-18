@@ -79,4 +79,5 @@
   (setq consult-gh-show-preview t)
   (setq consult-gh-repo-action #'consult-gh--repo-browse-files-action)
   (setq consult-gh-default-clone-directory "~/myworks/github/"))
+(setq projectile-switch-project-action #'dirvish)
 (shell "x")
