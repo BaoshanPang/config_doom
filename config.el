@@ -79,11 +79,13 @@
   (setq consult-gh-show-preview t)
   (setq consult-gh-repo-action #'consult-gh--repo-browse-files-action)
   (setq consult-gh-default-clone-directory "~/myworks/github/"))
-(setq projectile-switch-project-action #'dirvish)
+(after! projectile
+  (setq projectile-switch-project-action #'dirvish))
+// This would stop tramp working for some hosts
 ;; https://github.com/doomemacs/doomemacs/issues/6225#issuecomment-1161797450
-(after! tramp
-  ;; because I just use git
-  (setq vc-handled-backends '(Git))
-  ;; this the original value
-  (setq vc-ignore-dir-regexp "\\`\\(?:[\\/][\\/][^\\/]+[\\/]\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'"))
+;; (after! tramp
+;;   ;; because I just use git
+;;   (setq vc-handled-backends '(Git))
+;;   ;; this the original value
+;;   (setq vc-ignore-dir-regexp "\\`\\(?:[\\/][\\/][^\\/]+[\\/]\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'"))
 (shell "x")
