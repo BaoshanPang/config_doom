@@ -81,11 +81,35 @@
   (setq consult-gh-default-clone-directory "~/myworks/github/"))
 (after! projectile
   (setq projectile-switch-project-action #'dirvish))
-// This would stop tramp working for some hosts
+;; This would stop tramp working for some hosts
 ;; https://github.com/doomemacs/doomemacs/issues/6225#issuecomment-1161797450
 ;; (after! tramp
 ;;   ;; because I just use git
 ;;   (setq vc-handled-backends '(Git))
 ;;   ;; this the original value
 ;;   (setq vc-ignore-dir-regexp "\\`\\(?:[\\/][\\/][^\\/]+[\\/]\\|/\\(?:net\\|afs\\|\\.\\.\\.\\)/\\)\\'"))
-(shell "x")
+(after! tramp
+  (setq shell-file-name "/bin/bash"))
+;;(defun watch-variable-change (symbol newval operation where)
+;;  "Function to be called when VARIABLE is changed."
+;;  (message "Variable %s was changed to %s by %s at %s" symbol newval operation where))
+;;(add-variable-watcher 'shell-file-name #'watch-variable-change)
+(defun shell-command-at-point ()
+  "Execute shell command at point or from selected region."
+  (interactive)
+  (let* ((rcommand (if (use-region-p)
+                       (buffer-substring-no-properties (region-beginning) (region-end))
+                     (thing-at-point 'line t)))
+         (command (if (string-match ".*:\\s-*\\(.*\\)$" rcommand)
+                      (string-trim (match-string 1 rcommand))
+                    (string-trim command))))
+    (when command
+      (async-shell-command command "async"))))
+;; accept completion from copilot and fallback to company
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word)))
