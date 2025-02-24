@@ -113,3 +113,53 @@
               ("TAB" . 'copilot-accept-completion)
               ("C-TAB" . 'copilot-accept-completion-by-word)
               ("C-<tab>" . 'copilot-accept-completion-by-word)))
+
+
+(defun my/run-2fa-verify-command (output)
+  "Detect the OTP verification message and run the 2fa_verify command asynchronously.
+The URL and command are dynamically extracted from the buffer."
+  (when (string-match "remote: OTP verification is required to access the repository." output)
+    (save-excursion
+      (goto-char (point-min))
+      (when (re-search-forward "Use: ssh \\(git@[^ ]+\\) 2fa_verify" nil t)
+        (let ((command (concat "ssh " (match-string 1) " 2fa_verify")))
+          (async-shell-command command))))))
+
+;; Add the function to `comint-output-filter-functions`
+(add-hook 'comint-output-filter-functions 'my/run-2fa-verify-command)
+
+(defun my-get-magit-process-buffer ()
+  (get-buffer
+   (format "magit-process: %s"
+           (file-name-nondirectory
+            (directory-file-name (magit-toplevel))))))
+
+(defun my-handle-otp-verification ()
+  "Check the magit-process buffer for OTP verification and
+   run the required command."
+;;  (message "Checking for OTP verification...")
+  (let ((process-buffer (my-get-magit-process-buffer)))
+    (when process-buffer
+      (with-current-buffer process-buffer
+        (let ((content (buffer-string)))
+          ;; Check if the OTP verification message is present
+          (when (string-match "Use: \\(ssh git@.*\\)" content)
+            (let ((command (match-string 1 content)))
+              ;; Execute the extracted command
+              (message "Running OTP verification command: %s" command)
+              (async-shell-command command))))))))
+
+;; Add the function to the post-refresh hook
+(add-hook 'magit-post-refresh-hook 'my-handle-otp-verification)
+
+(defun my-clear-magit-process-buffer (&rest _)
+  "Clear the magit-process buffer before setting up a new command."
+  (message "Clearing magit-process buffer...")
+  (let ((buffer (my-get-magit-process-buffer)))
+    (when buffer
+      (with-current-buffer buffer
+        (let ((inhibit-read-only t))  ;; Temporarily disable read-only mode
+          (erase-buffer))))))
+
+;; Advise `magit-process-setup` to clear the buffer before setup
+(advice-add 'magit-process-setup :before #'my-clear-magit-process-buffer)
