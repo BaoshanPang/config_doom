@@ -128,17 +128,11 @@ The URL and command are dynamically extracted from the buffer."
 ;; Add the function to `comint-output-filter-functions`
 (add-hook 'comint-output-filter-functions 'my/run-2fa-verify-command)
 
-(defun my-get-magit-process-buffer ()
-  (get-buffer
-   (format "magit-process: %s"
-           (file-name-nondirectory
-            (directory-file-name (magit-toplevel))))))
-
 (defun my-handle-otp-verification ()
   "Check the magit-process buffer for OTP verification and
    run the required command."
-;;  (message "Checking for OTP verification...")
-  (let ((process-buffer (my-get-magit-process-buffer)))
+  (message "Checking for OTP verification...")
+  (let ((process-buffer (magit-process-buffer t)))
     (when process-buffer
       (with-current-buffer process-buffer
         (let ((content (buffer-string)))
@@ -155,7 +149,7 @@ The URL and command are dynamically extracted from the buffer."
 (defun my-clear-magit-process-buffer (&rest _)
   "Clear the magit-process buffer before setting up a new command."
   (message "Clearing magit-process buffer...")
-  (let ((buffer (my-get-magit-process-buffer)))
+  (let ((buffer (magit-process-buffer t)))
     (when buffer
       (with-current-buffer buffer
         (let ((inhibit-read-only t))  ;; Temporarily disable read-only mode
