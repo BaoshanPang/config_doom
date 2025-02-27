@@ -157,3 +157,25 @@ The URL and command are dynamically extracted from the buffer."
 
 ;; Advise `magit-process-setup` to clear the buffer before setup
 (advice-add 'magit-process-setup :before #'my-clear-magit-process-buffer)
+
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word)
+              ("C-n" . 'copilot-next-completion)
+              ("C-p" . 'copilot-previous-completion))
+
+  :config
+  (add-to-list 'copilot-indentation-alist '(prog-mode 2))
+  (add-to-list 'copilot-indentation-alist '(org-mode 2))
+  (add-to-list 'copilot-indentation-alist '(text-mode 2))
+  (add-to-list 'copilot-indentation-alist '(closure-mode 2))
+  (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2)))
+
+(use-package copilot-chat
+  :after (request org markdown-mode))
+
+(add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message)
