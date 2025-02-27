@@ -179,3 +179,5 @@ The URL and command are dynamically extracted from the buffer."
   :after (request org markdown-mode))
 
 (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message)
+(map! :leader
+      :desc "Copilot chat" "C" #'copilot-chat-transient)
