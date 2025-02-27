@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: hosts
+# uuid:
+# key: hosts
+# condition: t
+# --
+${1:$$(yas-choose-value '("bpang@172.30.107.84" "auto@172.30.107.84" "bpang@172.30.80.176"))}

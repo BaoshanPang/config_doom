@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name:dir_size_sort
+# key: dir_size_sort
+# --
+du -h --max-depth=1 . | sort -hr
