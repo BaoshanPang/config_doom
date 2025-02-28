@@ -181,3 +181,7 @@ The URL and command are dynamically extracted from the buffer."
 (add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message)
 (map! :leader
       :desc "Copilot chat" "C" #'copilot-chat-transient)
+
+(after! projectile
+  (setq projectile-git-fd-args
+      (replace-regexp-in-string "--strip-cwd-prefix\s*" "" projectile-git-fd-args)))
