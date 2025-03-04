@@ -55,6 +55,6 @@
 (package! copilot
   :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
 (package! leetcode
-  :recipe (:host github :repo "kaiwk/leetcode.el"))
+  :recipe (:host github :repo "BaoshanPang/leetcode.el"))
 (package! copilot-chat
   :recipe (:host github :repo "chep/copilot-chat.el"))

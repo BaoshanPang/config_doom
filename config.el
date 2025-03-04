@@ -185,3 +185,20 @@ The URL and command are dynamically extracted from the buffer."
 (after! projectile
   (setq projectile-git-fd-args
       (replace-regexp-in-string "--strip-cwd-prefix\s*" "" projectile-git-fd-args)))
+
+(defun auto-move-cursor ()
+  "Move cursor right every second. Stop with C-g."
+  (interactive)
+  (while t
+    (goto-char (random (point-max)))
+    (sit-for (random 60))) )
+
+(setq print-circle t)
+
+(defun my-shr-tag-sup (dom)
+  "Render <sup> as ^ followed by its content."
+  (insert "^")
+  (shr-generic dom))
+
+(if (not (display-graphic-p))
+    (advice-add 'shr-tag-sup :override #'my-shr-tag-sup))

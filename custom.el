@@ -4,7 +4,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(copilot-chat-model "claude-3.5-sonnet")
  '(custom-safe-themes
    '("7964b513f8a2bb14803e717e0ac0123f100fb92160dcf4a467f530868ebaae3e"
      "5c7720c63b729140ed88cf35413f36c728ab7c70f8cd8422d9ee1cedeb618de5" default))
@@ -19,10 +18,13 @@
      (projectile-project-test-cmd . "mkdir -p test; cd test; ./tools/test.sh")
      (projectile-project-test-cmd . "./tools/test.sh")
      (projectile-project-test-cmd . "npm test")
-     (projectile-project-compilation-cmd . "cd src; ./build_plecpl.sh --sfa2c"))))
+     (projectile-project-compilation-cmd . "cd src; ./build_plecpl.sh --sfa2c")))
+ '(shr-sup-raise-factor 0.5)
+ '(url-debug t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(shr-sup ((t (:height 0.5)))))
+(put 'customize-group 'disabled nil)
