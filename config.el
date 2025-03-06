@@ -32,7 +32,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'whiteboard)
+(setq doom-theme 'leuven)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -202,3 +202,10 @@ The URL and command are dynamically extracted from the buffer."
 
 (if (not (display-graphic-p))
     (advice-add 'shr-tag-sup :override #'my-shr-tag-sup))
+
+(defun disable-copilot-in-leetcode-solution-mode ()
+  "Disable Copilot mode when leetcode-solution-mode is active."
+  (when (bound-and-true-p leetcode-solution-mode)
+    (copilot-mode -1)))
+
+(add-hook 'leetcode-solution-mode-hook 'disable-copilot-in-leetcode-solution-mode)

@@ -7,7 +7,9 @@
  '(custom-safe-themes
    '("7964b513f8a2bb14803e717e0ac0123f100fb92160dcf4a467f530868ebaae3e"
      "5c7720c63b729140ed88cf35413f36c728ab7c70f8cd8422d9ee1cedeb618de5" default))
+ '(leetcode-directory "~/.leetcode")
  '(leetcode-prefer-language "cpp")
+ '(leetcode-save-solutions t)
  '(safe-local-variable-values
    '((projectile-project-configure-cmd . "./Configure -m FGT_NP8HS -d y")
      (projectile-project-run-cmd . "make run")
