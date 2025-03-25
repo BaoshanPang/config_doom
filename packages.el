@@ -57,4 +57,5 @@
 (package! leetcode
   :recipe (:host github :repo "BaoshanPang/leetcode.el"))
 (package! copilot-chat
-  :recipe (:host github :repo "chep/copilot-chat.el"))
+  :recipe (:host github :repo "BaoshanPang/copilot-chat.el"))
+(package! forge)

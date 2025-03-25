@@ -6,8 +6,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
-;; (setq user-full-name "John Doe"
-;;       user-mail-address "john@doe.com")
+(setq user-full-name "Baoshan Pang"
+      user-mail-address "pangbw@gmail.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
@@ -102,7 +102,7 @@
                      (thing-at-point 'line t)))
          (command (if (string-match ".*:\\s-*\\(.*\\)$" rcommand)
                       (string-trim (match-string 1 rcommand))
-                    (string-trim command))))
+                    (string-trim rcommand))))
     (when command
       (async-shell-command command "async"))))
 ;; accept completion from copilot and fallback to company
@@ -177,8 +177,13 @@ The URL and command are dynamically extracted from the buffer."
 
 (use-package copilot-chat
   :after (request org markdown-mode))
-
-(add-hook 'git-commit-setup-hook 'copilot-chat-insert-commit-message)
+(defun my-copilot-chat-insert-commit-message()
+        "Insert commit message from Copilot chat."
+        (interactive)
+        (if (magit-rebase-in-progress-p)
+            (message "Rebase in progress, do nothing.")
+          (copilot-chat-insert-commit-message)))
+(add-hook 'git-commit-setup-hook 'my-copilot-chat-insert-commit-message)
 (map! :leader
       :desc "Copilot chat" "C" #'copilot-chat-transient)
 
@@ -209,3 +214,40 @@ The URL and command are dynamically extracted from the buffer."
     (copilot-mode -1)))
 
 (add-hook 'leetcode-solution-mode-hook 'disable-copilot-in-leetcode-solution-mode)
+;; 1234 abc
+(defun number-to-hex ()
+  "Convert the number at point to hexadecimal."
+  (interactive)
+  (let ((number (thing-at-point 'number t)))
+    (if number
+        (message "%d => 0x%08x" number number)
+      (message "No number at point"))))
+
+(defun copy-file-path-with-line ()
+  "Copy buffer's file path with line number (suitable for GDB)."
+  (interactive)
+  (let* ((filename (expand-file-name (buffer-file-name)))
+         (line (line-number-at-pos))
+         (file-and-line (format "%s:%d" filename line)))
+    (kill-new file-and-line)
+    (message "yanked: %s" file-and-line)))
+
+;; mu4e + gmail
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
+;; FIXME: why I need to do this? otherwise I will get the errof of "mu4e-colorize-str is void"
+(load-file "~/.config/emacs/modules/email/mu4e/autoload/email.el")
+
+;; Each path is relative to the path of the maildir you passed to mu
+(set-email-account! "gmail.com"
+  '((smtpmail-smtp-user     . "pangbw@gmail.com")
+    (smtpmail-smtp-server   . "smtp.gmail.com")
+    (smtpmail-servers-requiring-authorization . "smtp\\.gmail\\.com"))
+  t)
+
+(setq mu4e-index-cleanup nil
+      ;; because gmail uses labels as folders we can use lazy check since
+      ;; messages don't really "move"
+      mu4e-index-lazy-check t )
+
+(setq mu4e-attachment-dir "~/Downloads")
+(setq auth-sources '("~/.authinfo"))
